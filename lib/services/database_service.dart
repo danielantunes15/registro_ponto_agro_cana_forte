@@ -55,7 +55,32 @@ class DatabaseService {
     print('📁 Registro salvo localmente: $registro');
   }
 
-  // Buscar o último registro de um funcionário no dia atual
+  // NOVO: Buscar todos os registros que ainda não foram sincronizados
+  Future<List<Map<String, dynamic>>> buscarRegistrosNaoSincronizados() async {
+    final db = await database;
+    final result = await db.query(
+      'registros',
+      where: 'sincronizado = ?',
+      whereArgs: [0],
+      orderBy: 'data_hora ASC',
+    );
+    print('📁 Encontrados ${result.length} registros não sincronizados.');
+    return result;
+  }
+  
+  // NOVO: Marcar um registro como sincronizado
+  Future<void> marcarComoSincronizado(String idLocal) async {
+    final db = await database;
+    await db.update(
+      'registros',
+      {'sincronizado': 1},
+      where: 'id = ?',
+      whereArgs: [idLocal],
+    );
+    print('✅ Registro local $idLocal marcado como sincronizado.');
+  }
+
+  // Busca o último registro de um funcionário no dia atual
   Future<Map<String, dynamic>?> buscarUltimoRegistroDoDia(String funcionarioId) async {
     final db = await database;
     final hoje = DateTime.now();

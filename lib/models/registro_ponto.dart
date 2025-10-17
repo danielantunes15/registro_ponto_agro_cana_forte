@@ -36,8 +36,16 @@ class RegistroPonto {
     };
   }
 
-  // Criar objeto a partir de JSON
+  // Criar objeto a partir de JSON (converte 0/1 do SQLite para bool)
   factory RegistroPonto.fromJson(Map<String, dynamic> json) {
+    bool isSincronizado = false;
+    final syncValue = json['sincronizado'];
+    if (syncValue is int) {
+      isSincronizado = syncValue == 1;
+    } else if (syncValue is bool) {
+      isSincronizado = syncValue;
+    }
+
     return RegistroPonto(
       id: json['id'],
       funcionarioId: json['funcionario_id'],
@@ -46,7 +54,7 @@ class RegistroPonto {
       dataHora: DateTime.parse(json['data_hora']),
       tipo: json['tipo'],
       localizacao: json['localizacao'],
-      sincronizado: json['sincronizado'] ?? false,
+      sincronizado: isSincronizado,
       qrCodeData: json['qr_code_data'],
     );
   }

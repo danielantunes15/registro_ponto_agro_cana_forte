@@ -8,23 +8,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:registro_ponto_agro_cana_forte/main.dart';
+import 'package:registro_ponto_agro_cana_forte/main.dart'; // Importa a classe main.dart
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Testa se o botão de escanear aparece na tela inicial', (WidgetTester tester) async {
+    // Constrói nosso app (Corrigido: usa AgroCanaForteApp)
+    await tester.pumpWidget(const AgroCanaForteApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verifica se a mensagem de boas-vindas aparece
+    expect(find.text('REGISTRO DE PONTO'), findsOneWidget);
+    
+    // Verifica se o botão principal de escanear está presente
+    expect(find.widgetWithText(ElevatedButton, 'ESCANEAR QR CODE'), findsOneWidget);
+    
+    // O teste de contador (0 e 1) foi removido, pois a tela inicial não possui um contador.
   });
 }

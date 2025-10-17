@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 import 'scanner_page.dart';
+import 'history_page.dart';
+import 'profile_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  ConnectivityResult _connectivityResult = ConnectivityResult.none;
+
+  @override
+  void initState() {
+    super.initState();
+    _initConnectivity();
+  }
+
+  Future<void> _initConnectivity() async {
+    final result = await Connectivity().checkConnectivity();
+    setState(() {
+      _connectivityResult = result;
+    });
+
+    Connectivity().onConnectivityChanged.listen((result) {
+      setState(() {
+        _connectivityResult = result;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isOnline = _connectivityResult != ConnectivityResult.none;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('🏭 Agro Cana Forte'),
@@ -14,11 +45,9 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              // Navegar para histórico depois
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('📊 Histórico em desenvolvimento...'),
-                ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryPage()),
               );
             },
           ),
@@ -104,10 +133,9 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('👤 Meus dados em desenvolvimento...'),
-                        ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfilePage()),
                       );
                     },
                     icon: const Icon(Icons.person),
@@ -147,16 +175,16 @@ class HomePage extends StatelessWidget {
       // Status bar inferior
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(15),
-        color: Colors.green[50],
-        child: const Row(
+        color: isOnline ? Colors.green[50] : Colors.orange[50],
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.wifi, size: 16, color: Colors.green),
-            SizedBox(width: 8),
+            Icon(isOnline ? Icons.wifi : Icons.wifi_off, size: 16, color: isOnline ? Colors.green : Colors.orange),
+            const SizedBox(width: 8),
             Text(
-              'Modo Online - Sincronização ativa',
+              isOnline ? 'Modo Online - Sincronização ativa' : 'Modo Offline - Salvo Localmente',
               style: TextStyle(
-                color: Colors.green,
+                color: isOnline ? Colors.green : Colors.orange,
                 fontWeight: FontWeight.bold,
               ),
             ),

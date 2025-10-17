@@ -38,8 +38,8 @@ class SupabaseService {
   Future<bool> sincronizarRegistro(Map<String, dynamic> registro) async {
     print('☁️ Tentando sincronizar com Supabase: $registro');
     try {
-      // Remove o campo 'id' local para que o Supabase gere um novo
-      final registroParaEnviar = Map<String, dynamic>.from(registro)..remove('id');
+      // Remove o campo 'id' local e 'sincronizado' para que o Supabase gere um novo
+      final registroParaEnviar = Map<String, dynamic>.from(registro)..remove('id')..remove('sincronizado');
 
       await _supabase
           .from('app_registros_ponto') // <-- NOME DA TABELA ALTERADO AQUI
@@ -51,5 +51,32 @@ class SupabaseService {
       print('❌ Erro ao sincronizar com Supabase: $e');
       return false;
     }
+  }
+  
+  // NOVO: Sincroniza um lote de registros pendentes
+  Future<List<String>> sincronizarLoteDeRegistros(List<Map<String, dynamic>> registros) async {
+    final List<String> idsSincronizados = [];
+    if (registros.isEmpty) return idsSincronizados;
+
+    print('☁️ Sincronizando ${registros.length} registros pendentes...');
+
+    for (var registro in registros) {
+      final idLocal = registro['id'] as String;
+      try {
+        final registroParaEnviar = Map<String, dynamic>.from(registro)..remove('id')..remove('sincronizado');
+
+        await _supabase
+            .from('app_registros_ponto') 
+            .insert(registroParaEnviar);
+        
+        idsSincronizados.add(idLocal);
+        print('✅ Registro local $idLocal sincronizado e pronto para ser marcado.');
+      } catch (e) {
+        // Se houver erro, apenas imprime e continua para o próximo
+        print('❌ Falha ao sincronizar registro $idLocal: $e');
+      }
+    }
+    
+    return idsSincronizados;
   }
 }
