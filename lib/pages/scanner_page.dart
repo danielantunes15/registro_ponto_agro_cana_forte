@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart'; // CORRIGIDO AQUI
 import '../models/funcionario.dart';
 import '../services/database_service.dart';
 import '../services/supabase_service.dart';

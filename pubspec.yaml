@@ -15,11 +15,11 @@ dependencies:
   supabase_flutter: ^2.1.1
   sqflite: ^2.3.0
   path: ^1.8.3
-  qr_code_scanner: ^1.0.1
-  camera: ^0.10.5
+  qr_code_scanner_plus: ^2.0.12 # CORREÇÃO para o erro de Namespace
+  camera: ^0.10.6
   permission_handler: ^11.0.1
   connectivity_plus: ^5.0.1
-  workmanager: ^0.5.1
+  workmanager: ^0.9.0 # CORREÇÃO para o erro de Android V1 Embedding (Shim/Registrar)
   intl: ^0.18.1
 
 dev_dependencies:

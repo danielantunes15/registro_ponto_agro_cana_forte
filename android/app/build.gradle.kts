@@ -5,12 +5,16 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// IMPORTAÇÕES ADICIONADAS PARA RESOLVER O ERRO DE COMPILAÇÃO
+import java.util.Properties
+import java.io.FileInputStream
+
 // CÓDIGO ADICIONADO AQUI - Início
 // Carrega as propriedades do arquivo key.properties
 val keyPropertiesFile = rootProject.file("key.properties")
-val keyProperties = java.util.Properties()
+val keyProperties = Properties() // Corrigido: usando a importação Properties
 if (keyPropertiesFile.exists()) {
-    keyProperties.load(java.io.FileInputStream(keyPropertiesFile))
+    keyProperties.load(FileInputStream(keyPropertiesFile)) // Corrigido: usando a importação FileInputStream
 }
 // CÓDIGO ADICIONADO AQUI - Fim
 
@@ -52,7 +56,6 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            
             // CÓDIGO MODIFICADO AQUI
             // Aponta para a configuração de assinatura 'release' que criamos acima
             signingConfig = signingConfigs.getByName("release")
