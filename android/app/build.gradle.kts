@@ -54,9 +54,12 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            // CÓDIGO MODIFICADO AQUI
+            // CÓDIGO MODIFICADO AQUI - Habilita a minificação e aponta para o arquivo de regras
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro" 
+            )
             // Aponta para a configuração de assinatura 'release' que criamos acima
             signingConfig = signingConfigs.getByName("release")
         }
